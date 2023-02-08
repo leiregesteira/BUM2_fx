@@ -29,7 +29,7 @@ public class FlightBookingController {
     private ObservableList<ConcreteFlight> conFlightInfo = FXCollections.observableArrayList();
 
     @FXML
-    private ListView<ConcreteFlight> conFlightList;
+    private ComboBox<ConcreteFlight> conFlightList;
     ;
 
     @FXML
@@ -122,8 +122,14 @@ public class FlightBookingController {
             List<ConcreteFlight> foundConFlights = businessLogic.
                     getMatchingConFlights(departureInput.getText(),
                             arrivalInput.getText(), chosenDate);
-            for (ConcreteFlight v : foundConFlights)
-                conFlightInfo.add(v);
+            for (ConcreteFlight v : foundConFlights){
+                if (firstRB.isSelected() && v.getFreeFirstSeatNo() > 0)
+                    conFlightInfo.add(v);
+                else if (businessRB.isSelected() && v.getFreeBusinessSeatNo() > 0)
+                    conFlightInfo.add(v);
+                else if (economyRB.isSelected() && v.getFreeEconomySeatNo() > 0)
+                    conFlightInfo.add(v);
+            }
             if (foundConFlights.isEmpty())
                 searchResultAnswer.setText("No matching flights found. " +
                         "Please change your options");
